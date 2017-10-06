@@ -1,0 +1,17 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker info
+  - docker build -t hrektts/emscripten .
+
+script:
+  - docker run -it hrektts/emscripten emsdk list
+  - docker run -it hrektts/emscripten clang -v
+  - docker run -it hrektts/emscripten clang++ -v
+  - docker run -it hrektts/emscripten llvm-ar --version
+  - docker run -it hrektts/emscripten emcc -v
+  - docker run -it hrektts/emscripten em++ -v
+  - docker run -it hrektts/emscripten node -v
