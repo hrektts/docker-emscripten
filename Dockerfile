@@ -8,8 +8,8 @@ ENV EMSDK=/emsdk_portable
 ENV EM_CONFIG=${EMSDK}/.emscripten
 ENV EMSCRIPTEN=${EMSDK}/emscripten/tag-${VERSION}
 
+ENV PATH=${EMSDK}/emscripten/tag-${VERSION}:${EMSDK}/binaryen/tag-${VERSION}_64bit_binaryen/bin:${PATH}
 ENV PATH=${EMSDK}:${EMSDK}/clang/tag-e${VERSION}/build_tag-e${VERSION}_64/bin:${PATH}
-ENV PATH=${EMSDK}/emscripten/tag-${VERSION}:${PATH}
 
 RUN wget -qO - https://deb.nodesource.com/setup_8.x | bash - \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -26,6 +26,7 @@ RUN wget -qO - https://deb.nodesource.com/setup_8.x | bash - \
  && ./emsdk install sdk-tag-${VERSION}-64bit binaryen-tag-${VERSION}-64bit \
     --build='MinSizeRel' --enable-wasm \
  && ./emsdk activate sdk-tag-${VERSION}-64bit \
+ && ./emsdk activate binaryen-tag-${VERSION}-64bit \
  && ./emsdk construct_env \
  && mv ~/.emscripten ${EM_CONFIG} \
  && sed -e "s:^\(NODE_JS=\).*:\1'$(which node)':g" -i ${EM_CONFIG} \
