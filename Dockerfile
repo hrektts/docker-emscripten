@@ -30,5 +30,24 @@ RUN wget -qO - https://deb.nodesource.com/setup_8.x | bash - \
  && ./emsdk construct_env \
  && mv ~/.emscripten ${EM_CONFIG} \
  && sed -e "s:^\(NODE_JS=\).*:\1'$(which node)':g" -i ${EM_CONFIG} \
+ && emcc --clear-cache --clear-ports \
  && rm -rf ${EMSDK}/node \
- && rm -rf /var/lib/apt/lists/*
+ && rm -f ${EMSDK}/binaryen-tags.txt \
+    ${EMSDK}/emscripten-nightlies.txt ${EMSDK}/emscripten-tags.txt \
+    ${EMSDK}/llvm-nightlies-32bit.txt ${EMSDK}/llvm-nightlies-64bit.txt \
+    ${EMSDK}/llvm-tags-32bit.txt ${EMSDK}/llvm-tags-64bit.txt \
+ && rm -rf ${EMSDK}/zips \
+ && find ${EMSDK} -name "CMakeFiles" -type d -prune -exec rm -fr {} \; \
+ && find ${EMSDK} -name "CMakeCache.txt" -exec rm {} \; \
+ && find ${EMSDK} -name "*.o" -exec rm {} \; \
+ && find ${EMSDK} -name "*.a" -exec rm {} \; \
+ && find ${EMSDK} -name "*.inc*" -exec rm {} \; \
+ && find ${EMSDK} -name "*.gen.tmp" -exec rm {} \; \
+ && find ${EMSDK} -name "*.pyc" -exec rm {} \; \
+ && apt-get --purge remove -y \
+    build-essential \
+    git \
+ && apt-get --purge autoremove -y \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && rm -rf /var/cache/debconf/*-old
