@@ -1,9 +1,7 @@
 all: build
 
 build:
-	@docker build -t hrektts/emscripten:latest .
+	@docker build --build-arg version=1.37.21 -t hrektts/emscripten:latest .
 
 release: build
-	@docker build -t hrektts/emscripten:$(shell cat Dockerfile | \
-		grep version | \
-		sed -e 's/[^"]*"\([^"]*\)".*/\1/') .
+	@docker tag hrektts/emscripten:latest hrektts/emscripten:1.37.21
